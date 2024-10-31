@@ -2,7 +2,7 @@ Iniciar o projeto Django
 
 python -m venv venv
 . venv/bin/activate
-pip install django
+pip install djangogit status
 django-admin startproject project .
 Configurar o git
 
@@ -13,4 +13,5 @@ git config --global init.defaultBranch main
 git init
 git add .
 git commit -m 'Mensagem'
-git remote add origin URL_DO_GIT
+# git remote add origin URL_DO_GIT
+git remote add origin https://github.com/atilacapovilla/agenda.git
