@@ -1,4 +1,5 @@
-from django.shortcuts import render, get_object_or_404
+from django.db.models import Q
+from django.shortcuts import render, get_object_or_404, redirect
 from contact.models import Contact
 
 
@@ -6,12 +7,47 @@ def index(request):
     # contacts = Contact.objects.all().order_by('-id')
     # contacts = Contact.objects.filter(show=True).order_by('-id')
 
-    contacts = Contact.objects.filter(show=True).order_by('-id')[0:5]
+    contacts = Contact.objects.filter(show=True).order_by('-id')[0:20]
     # print(contacts.query)
 
     context = {
         'contacts': contacts,
         'site_title': 'Contatos '
+    }
+
+    return render(
+        request,
+        'contact/index.html',
+        context
+    )
+
+
+def search(request):
+    # search_value = request.GET['q']
+
+    # para evitar erros - .strip, remove espaços do começo e do fim
+    search_value = request.GET.get('q', '').strip()
+
+    if search_value == '':
+        return redirect('contact:index')
+
+    # com a virgula ( , )- AND
+    # Q(first_name__icontains=search_value), Q(last_name__icontains=search_value)
+    # com o pipe ( | )- OR
+    # Q(first_name__icontains=search_value) | Q(last_name__icontains=search_value)
+    contacts = Contact.objects\
+        .filter(show=True)\
+        .filter(
+            Q(first_name__icontains=search_value) |
+            Q(last_name__icontains=search_value) |
+            Q(phone__icontains=search_value) |
+            Q(email__icontains=search_value)
+        )\
+        .order_by('-id')
+
+    context = {
+        'contacts': contacts,
+        'site_title': 'Search '
     }
 
     return render(
