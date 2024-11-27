@@ -53,34 +53,72 @@ class ContactForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = self.cleaned_data
+        first_name = self.cleaned_data.get('first_name')
+        last_name = self.cleaned_data.get('last_name')
 
-        self.add_error(
-            'first_name',
-            ValidationError(
-                'Mensagem de erro',
+        if first_name == last_name:
+            msg = ValidationError(
+                'Primeiro e segundo nome não podem ser iguais',
                 code='invalid'
             )
-        )
-        self.add_error(
-            'first_name',
-            ValidationError(
-                'Mensagem de erro 2',
-                code='invalid'
-            )
-        )
-        self.add_error(
-            None,
-            ValidationError(
-                'Mensagem de erro de formulário non-field_error 1',
-                code='invalid'
-            )
-        )
-        self.add_error(
-            None,
-            ValidationError(
-                'Mensagem de erro de formulário non-field_error 2',
-                code='invalid'
-            )
-        )
+            self.add_error('first_name', msg)
+            self.add_error('last_name', msg)
+
+        # if first_name == last_name:
+        #     self.add_error(
+        #         ValidationError(
+        #             'Primeiro e segundo nomes não podem ser iguais',
+        #             code='invalid'
+        #         )
+        #     )
+
+        # self.add_error(
+        #     'first_name',
+        #     ValidationError(
+        #         'Mensagem de erro',
+        #         code='invalid'
+        #     )
+        # )
+        # self.add_error(
+        #     'first_name',
+        #     ValidationError(
+        #         'Mensagem de erro 2',
+        #         code='invalid'
+        #     )
+        # )
+        # self.add_error(
+        #     None,
+        #     ValidationError(
+        #         'Mensagem de erro de formulário non-field_error 1',
+        #         code='invalid'
+        #     )
+        # )
+        # self.add_error(
+        #     None,
+        #     ValidationError(
+        #         'Mensagem de erro de formulário non-field_error 2',
+        #         code='invalid'
+        #     )
+        # )
 
         return super().clean()
+
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get('first_name')
+
+        # if first_name == 'ABC':
+        #     raise ValidationError(
+        #         'Não digite ABC neste campo',
+        #         code='invalid'
+        #     )
+
+        if first_name == 'ABC':
+            self.add_error(
+                'first_name',
+                ValidationError(
+                    'Não digite ABC neste campo',
+                    code='invalid'
+                )
+            )
+
+        return first_name
