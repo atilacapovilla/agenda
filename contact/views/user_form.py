@@ -7,11 +7,14 @@ def register(request):
 
     if request.method == 'POST':
         form = RegisterForm(request.POST)
-        if form.is_valid:
+
+        if form.is_valid():
             form.save()
 
-    context = {
-        'form': form,
-    }
-
-    return render(request, 'contact/register.html', context)
+    return render(
+        request,
+        'contact/register.html',
+        {
+            'form': form
+        }
+    )
